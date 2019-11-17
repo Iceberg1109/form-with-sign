@@ -162,32 +162,71 @@
 					this.government_name = this.$route.params.government_name;
 				}
 				axios.get('/api/fax/client/get')
-					.then(response => {
-						if(response.data.gender)
-							this.clientForm.gender = response.data.gender;
-						if(response.data.firstname)
-							this.clientForm.firstname = response.data.firstname;
-						if(response.data.lastname)
-							this.clientForm.lastname = response.data.lastname;
-						if(response.data.postcode)
-							this.clientForm.postcode = response.data.postcode;
-						if(response.data.housenumber)
-							this.clientForm.housenumber = response.data.housenumber;
-						if(response.data.telephone)
-							this.clientForm.telephone = response.data.telephone;
-						if(response.data.email)
-							this.clientForm.email = response.data.email;
-						if(response.data.banknumber)
-							this.clientForm.banknumber = response.data.banknumber;
-						if(response.data.address)
-							this.clientForm.address = response.data.address;
-						if(response.data.city)
-							this.clientForm.city = response.data.city;
-					}).catch(response => {
-						console.log("error");
-					});
+				.then(response => {
+					if(response.data.gender)
+						this.clientForm.gender = response.data.gender;
+					if(response.data.firstname)
+						this.clientForm.firstname = response.data.firstname;
+					if(response.data.lastname)
+						this.clientForm.lastname = response.data.lastname;
+					if(response.data.postcode)
+						this.clientForm.postcode = response.data.postcode;
+					if(response.data.housenumber)
+						this.clientForm.housenumber = response.data.housenumber;
+					if(response.data.telephone)
+						this.clientForm.telephone = response.data.telephone;
+					if(response.data.email)
+						this.clientForm.email = response.data.email;
+					if(response.data.banknumber)
+						this.clientForm.banknumber = response.data.banknumber;
+					if(response.data.address)
+						this.clientForm.address = response.data.address;
+					if(response.data.city)
+						this.clientForm.city = response.data.city;
+				}).catch(response => {
+					console.log("error");
+				});
 			},
-			
+			onPrev(){
+				this.$router.push({
+					name: this.form_type
+				})
+			},
+			onSave(){
+				if (this.$refs.form.validate()) {
+					let clientForm = new FormData();
+					clientForm.append('gender', this.clientForm.gender);
+					clientForm.append('firstname', this.clientForm.firstname);
+					clientForm.append('lastname', this.clientForm.lastname);
+					clientForm.append('postcode', this.clientForm.postcode);
+					clientForm.append('housenumber', this.clientForm.housenumber);
+					clientForm.append('email', this.clientForm.email);
+					clientForm.append('telephone', this.clientForm.telephone);
+					clientForm.append('banknumber', this.clientForm.banknumber);
+					clientForm.append('address', this.clientForm.address);
+					clientForm.append('city', this.clientForm.city);
+					this.loading = true;
+					axios.post('/api/fax/client/save', clientForm)
+					.then(response =>  {
+						if(response.data.result === "success") {
+							this.$emit("changeStep", 3);
+							localStorage.setItem('bank_number', this.clientForm.banknumber);
+							localStorage.setItem('firstname', this.clientForm.firstname);
+							localStorage.setItem('email', this.clientForm.email);
+							this.$router.push({
+								name: 'sign'
+							})
+						}
+						this.loading = false;
+					}).catch(error => {
+						this.loading = false;
+						// this.$message({
+					 //        type: 'error',
+					 //        message: response.data.message
+					 //    });
+					});
+				}
+			},
 		}
 	}
 </script>
