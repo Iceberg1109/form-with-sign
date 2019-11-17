@@ -227,6 +227,27 @@
 					});
 				}
 			},
+			getAddress(){
+				if(this.clientForm.postcode != '' && this.clientForm.housenumber != ''){
+					let addressForm = new FormData();
+					addressForm.append('postal', this.clientForm.postcode);
+					addressForm.append('house', this.clientForm.housenumber);
+					axios.post('/api/fax/post', addressForm)
+					.then(response =>  {
+						if(response.data.status == 1){
+							console.log(response.data);
+							this.valid_address = true;
+							this.clientForm.address = response.data.data.address;
+							this.clientForm.city = response.data.data.city;
+						}
+					}).catch(error => {
+						// this.$message({
+					 //        type: 'error',
+					 //        message: response.data.message
+					 //    });
+					});
+				}
+			}
 		}
 	}
 </script>
