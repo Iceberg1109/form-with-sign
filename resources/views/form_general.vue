@@ -515,7 +515,218 @@
 					});
 				}
 			},
-			
+			onEmailSubmit(){
+				if(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(this.dateNotifyEmail)){
+					this.loading = true;
+					let generalForm = new FormData();
+					generalForm.append('notify_email', this.dateNotifyEmail);
+					generalForm.append('days', this.diff_days);
+					console.log(this.diff_days);
+					axios.post('/api/fax/general/savenotifyemail', generalForm)
+						.then(response =>  {
+							this.loading = false;
+							this.successSnackbar = true;
+							this.success_msg = 'Saved Successfully!';
+						}).catch(error => {
+						this.loading = false;
+						this.errorSnackbar = true;
+						this.err_msg = 'An error occurred.';
+					});
+				}
+				else{
+					this.errorSnackbar = true;
+					this.err_msg = 'Vul hier een geldig emailadres in.';
+				}
+			},
+			showAlert(truthy){
+				if(truthy == 1)
+					this.alertShow = true;
+				else if(truthy == 0)
+					this.alertShow = false;
+			},
+			selectAppType(){
+				this.generalForm.app_data = '';
+				if(this.generalForm.app_type === 'Aanvraag'){
+					this.title_request_date = 'Kies de datum van uw aanvraag:';
+					this.app_data = [
+						{
+							index: 1,
+							period: 56,
+							value: "Standaard beslistermijn aanvraag (8 weken)",
+						},
+						{
+							index: 2,
+							period: 56,
+							value: "Wmo voorziening",
+						},
+						{
+							index: 3,
+							period: 56,
+							value: "Individuele inkomsentoeslag",
+						},
+						{
+							index: 4,
+							period: 56,
+							value: "Bijstandsuitkering (Participatiewet)",
+						},
+						{
+							index: 5,
+							period: 56,
+							value: "Bijzondere bijstand (Participatiewet)",
+						},
+						{ divider: true },
+						{
+							index: 6,
+							period: 56,
+							value: "WIA uitkering",
+						},
+						{
+							index: 7,
+							period: 28,
+							value: "WW uitkering",
+						},
+						{
+							index: 8,
+							period: 28,
+							value: "ZW uitkering",
+						},
+						{ divider: true },
+						{
+							index: 9,
+							period: 35,
+							value: "Belastingdienst - Zorgtoeslag",
+						},
+						{
+							index: 10,
+							period: 35,
+							value: "Belastingdienst - Huurtoeslag",
+						},
+						{
+							index: 11,
+							period: 35,
+							value: "Belastingdienst - Kinderopvangtoeslag",
+						},
+						{
+							index: 12,
+							period: 35,
+							value: "Belastingdienst - Kindgebondenbudget",
+						},
+						{ divider: true },
+						{
+							index: 13,
+							period: 56,
+							value: "Omgevingsvergunning (eenvoudige aanvraag)",
+						},
+						{
+							index: 14,
+							period: 56,
+							value: "Schuldhulpverlening",
+						}
+					];
+				}
+				else if(this.generalForm.app_type === 'Bezwaarschrift'){
+					this.title_request_date = 'Op welke datum is op uw aanvraag beslist:';
+					this.app_data = [
+						{
+							index: 1,
+							period: 84,
+							value: "Standaard beslistermijn bezwaar (12 weken)",
+						},
+						{
+							index: 2,
+							period: 84,
+							value: "Wmo voorziening",
+						},
+						{
+							index: 3,
+							period: 84,
+							value: "Individuele inkomsentoeslag",
+						},
+						{
+							index: 4,
+							period: 84,
+							value: "Bijstandsuitkering (Participatiewet)",
+						},
+						{
+							index: 5,
+							period: 84,
+							value: "Bijzondere bijstand (Participatiewet)",
+						},
+						{ divider: true },
+						{
+							index: 6,
+							period: 84,
+							value: "WIA uitkering",
+						},
+						{
+							index: 7,
+							period: 91,
+							value: "WW uitkering",
+						},
+						{
+							index: 8,
+							period: 91,
+							value: "ZW bezwaar tegen hoogte dagloon",
+						},
+						{
+							index: 9,
+							period: 119,
+							value: "ZW met medisch onderzoek",
+						},
+						{ divider: true },
+						{
+							index: 10,
+							period: 84,
+							value: "Belastingdienst - Zorgtoeslag",
+						},
+						{
+							index: 11,
+							period: 84,
+							value: "Belastingdienst - Huurtoeslag",
+						},
+						{
+							index: 12,
+							period: 84,
+							value: "Belastingdienst - Kinderopvangtoeslag",
+						},
+						{
+							index: 13,
+							period: 84,
+							value: "Belastingdienst - Kindgebondenbudget",
+						}
+					];
+				}
+				else{
+					this.title_request_date = 'Op welke datum is op uw aanvraag beslist:';
+					this.app_data = [
+						{
+							index: 1,
+							period: 126,
+							value: "Standaard beslistermijn bezwaar commissie (18 weken)",
+						}
+					];
+				}
+			},
+			setAppData(){
+				var data_index = this.generalForm.app_data;
+				let arrMatch = this.app_data.filter(function(x){
+					return x.index == data_index;
+				});
+				this.generalForm.app_data = arrMatch[0];
+			},
+			getMunicipality(){
+				var name = this.generalForm.municipality;
+				let arrMatch = this.municipalities.filter(function(x){
+					return x.name == name;
+				});
+				this.municipality = arrMatch[0];
+			},
+			gettanggal(str) {
+				if (str != null) {
+					return str.substring(8, 10)+'-'+str.substring(5, 7)+'-'+str.substring(0, 4);
+				}
+				return '';
+			},
 		}
 	}
 </script>
