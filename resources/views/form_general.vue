@@ -745,7 +745,32 @@
 					}
 				}
 			},
-			
+			limitSubjectCount(evt) {
+				if (this.generalForm.subject.length >= 35) {
+					if ((evt.keyCode >= 48 && evt.keyCode <= 90) 
+						|| (evt.keyCode >= 96 && evt.keyCode <= 111)
+						|| (evt.keyCode >= 186 && evt.keyCode <= 222) ) {
+						evt.preventDefault();
+						this.show_sub_overmsg = true;
+					}
+					else {
+						this.show_sub_overmsg = false;
+					}
+				}
+			},
+			limitSubjectPaste(evt) {
+				var clipdata = evt.clipboardData.getData('text/plain');
+				
+				if (this.generalForm.subject.length + clipdata.length >= 35) {
+					evt.preventDefault();
+					var str = this.generalForm.subject + clipdata;
+					this.generalForm.subject = str.substr(0, 35);
+					this.show_sub_overmsg = true;
+				}
+				else {
+					this.show_sub_overmsg = false;
+				}
+			}
 		}
 	}
 </script>
