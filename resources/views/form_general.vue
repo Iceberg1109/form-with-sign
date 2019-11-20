@@ -727,6 +727,25 @@
 				}
 				return '';
 			},
+			changeWeekandDays(e){
+				if(e.target.id === 'weeks'){
+					if(e.keyCode <= 47 || e.keyCode >= 58){
+						e.preventDefault();
+					}
+					else{
+						this.days = '';
+					}
+				}
+				else {
+					if(e.keyCode <= 47 || e.keyCode >= 58){
+						e.preventDefault();
+					}
+					else{
+						this.weeks = '';
+					}
+				}
+			},
+			
 		}
 	}
 </script>
