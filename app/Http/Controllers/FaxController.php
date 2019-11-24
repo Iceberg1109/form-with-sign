@@ -99,4 +99,22 @@ class FaxController extends Controller
 		return Postal::Validate($request);
 	}
 
+	public function saveForm(Request $request)
+	{
+		Session::put([
+			'app_type' => $request->app_type,
+			'app_data' => $request->app_data,
+			'request_date' => $request->request_date,
+			'letter_received' => $request->letter_received,
+			'letter_weeks' => $request->letter_weeks,
+			'letter_days' => $request->letter_days,
+			'subject' => $request->subject,
+			'feature' => $request->feature,
+			'municipality' => $request->municipality,
+		]);
+		return response()->json([
+			"result" => "success",
+			"message" => "Saved successfully"
+		]);
+	}
 }
