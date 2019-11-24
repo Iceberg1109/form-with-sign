@@ -99,6 +99,48 @@ class FaxController extends Controller
 		return Postal::Validate($request);
 	}
 
+	public function getForm()
+	{
+		Session::put([
+			'form_type' => 'form_ingebreke'
+		]);
+		$request_ip = request()->ip();
+		$ip = IpList::where('ip', '=', $request_ip)->first();
+		if( $ip != null && $ip->status != 'allow'){
+			if($ip->status == 'disallow') {
+				$date = new \DateTime();
+				$date->modify('-1 day');
+				$formatted_date = $date->format('Y-m-d H:i:s');
+
+				$count = Customer::where([['ip', '=', $request_ip], ['created_at', '>',$formatted_date]])->count();
+				if($count > 2){
+					return response()->json([
+						"result" => "block",
+						"message" => "U heeft het systeem twee keer gebruikt.<br/>Als u meer procedures wilt starten kunt u een berichtje sturen naar support@beslisapp.nl."
+					]);
+				}
+			}
+			else if ($ip->status == 'block'){
+				return response()->json([
+					"result" => "block",
+					"message" => "U heeft het systeem twee keer gebruikt.<br/>Als u meer procedures wilt starten kunt u een berichtje sturen naar support@beslisapp.nl."
+				]);
+			}
+		}
+		$municipalities = DB::table('municipality')->get();
+		return response()->json([
+			'app_type' => Session::get('app_type'),
+			'app_data' => Session::get('app_data'),
+			'request_date' => Session::get('request_date'),
+			'letter_received' => Session::get('letter_received'),
+			'letter_weeks' => Session::get('letter_weeks'),
+			'letter_days' => Session::get('letter_days'),
+			'subject' => Session::get('subject'),
+			'municipality' => Session::get('municipality'),
+			'municipalities' => compact('municipalities'),
+		], 200);
+	}
+
 	public function saveForm(Request $request)
 	{
 		Session::put([
