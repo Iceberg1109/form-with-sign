@@ -159,4 +159,48 @@ class FaxController extends Controller
 			"message" => "Saved successfully"
 		]);
 	}
+
+	public function saveClient(Request $request)
+	{
+		$ip = IpList::where('ip', '=', $request->ip())->first();
+		if( $ip != null && $ip->status != 'allow'){
+			if($ip->status == 'disallow') {
+				$date = new \DateTime();
+				$date->modify('-1 day');
+				$formatted_date = $date->format('Y-m-d H:i:s');
+
+				$count = Customer::where([['ip', '=', $request->ip()], ['created_at', '>',$formatted_date]])->count();
+				if($count > 2){
+					return response()->json([
+						"result" => "fail",
+						"message" => "U heeft het systeem twee keer gebruikt.<br/>Als u meer procedures wilt starten kunt u een berichtje sturen naar support@beslisapp.nl."
+					]);
+				}
+			}
+			else if ($ip->status == 'block'){
+				return response()->json([
+					"result" => "fail",
+					"message" => "U heeft het systeem twee keer gebruikt.<br/>Als u meer procedures wilt starten kunt u een berichtje sturen naar support@beslisapp.nl."
+				]);
+			}
+		}
+
+		Session::put([
+			'gender' => $request->gender,
+			'firstname' => $request->firstname,
+			'lastname' => $request->lastname,
+			'postcode' => $request->postcode,
+			'housenumber' => $request->housenumber,
+			'telephone' => $request->telephone,
+			'banknumber' => $request->banknumber,
+			'email' => $request->email,
+			'address' => $request->address,
+			'city' => $request->city,
+		]);
+
+		return response()->json([
+			"result" => "success",
+			"message" => "Saved successfully"
+		]);
+	}
 }
