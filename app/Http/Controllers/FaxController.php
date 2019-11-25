@@ -160,6 +160,22 @@ class FaxController extends Controller
 		]);
 	}
 
+	public function getClient()
+	{
+		return response()->json([
+			'gender' => Session::get('gender'),
+			'firstname' => Session::get('firstname'),
+			'lastname' => Session::get('lastname'),
+			'postcode' => Session::get('postcode'),
+			'housenumber' => Session::get('housenumber'),
+			'telephone' => Session::get('telephone'),
+			'banknumber' => Session::get('banknumber'),
+			'email' => Session::get('email'),
+			'address' => Session::get('address'),
+			'city' => Session::get('city'),
+		]);
+	}
+
 	public function saveClient(Request $request)
 	{
 		$ip = IpList::where('ip', '=', $request->ip())->first();
