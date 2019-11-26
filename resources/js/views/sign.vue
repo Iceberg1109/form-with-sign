@@ -177,6 +177,86 @@
 					this.$refs.media.click();
 				}
 			},
+			onSave(){
+				var action = '';
+				if(this.form_type == 'form_ingebreke')
+					action = '/api/fax/publishform_ingebreke';
+				if(this.form_type == 'form_bezwaar')
+					action = '/api/fax/publishform_bezwaar';
+				if(this.form_type == 'form_aanvraag')
+					action = '/api/fax/publishform_aanvraag';
+				
+				if(this.sign_mode == 1){
+					const { isEmpty, data } = this.$refs.signaturePad.saveSignature();
+					if(isEmpty){
+						this.err_msg = 'Please draw your signature.';
+						return false;
+					}
+					let signForm = new FormData();
+					signForm.append('mode', this.sign_mode);
+					signForm.append('sign', data);
+					this.loading = true;
+					axios.post(action, signForm)
+					.then(response =>  {
+						var form_type = localStorage.form_type;
+						// localStorage.removeItem('form_type');
+						localStorage.removeItem('government_name');
+						localStorage.removeItem('firstname');
+						localStorage.removeItem('bank_number');
+						
+						if(response.data.result == "success"){
+							this.$emit("changeStep", 4);
+							this.$router.push({
+								name: 'thanks',
+								params: {created: response.data.created}
+							})
+						} else if(response.data.result == "fail"){
+							this.$emit("changeStep", 1);
+							this.$router.push({
+								name: form_type
+							})
+						}
+						this.loading = false;
+					}).catch(error => {
+						this.loading = false;
+						console.log(error);
+						this.show_errMsg = true;
+					});
+				} else if(this.sign_mode == 2){
+					if(this.sign_img == ''){
+						this.err_msg = 'image not found.';
+						return false;
+					}
+					let signForm = new FormData();
+					signForm.append('mode', 2);
+					signForm.append('media', $('#media')[0].files[0]);
+					console.log($('#media')[0].files[0]);
+					this.loading = true;
+					axios.post(action, signForm)
+					.then(response =>  {
+						localStorage.removeItem('bank_number');
+						localStorage.removeItem('government_name');
+						if(response.data.result == "success"){
+							this.$emit("changeStep", 4);
+							this.$router.push({
+								name: 'thanks'
+							})
+						} else if(response.data.result == "fail"){
+							this.$emit("changeStep", 1);
+							this.$router.push({
+								name: 'general'
+							})
+						}
+						this.loading = false;
+					}).catch(error => {
+						this.loading = false;
+						this.show_errMsg = true;
+					});
+				}
+				else{
+					this.err_msg = 'Plaats hier uw handtekening.';
+				}
+			},
 		}
 	}
 </script>
