@@ -17,14 +17,14 @@
 				<v-card flat>
 					<v-card-title>
 						<v-container>
-							<span class="headline">ALGEMENE INFORMATIE</span>
+							<span class="headline">GENERAL INFORMATION</span>
 						</v-container>
 					</v-card-title>
 					<v-card-text>
 						<v-container grid-list-md>
 							<v-layout wrap>
 								<v-flex xs12 sm12 md12>
-									<h3>* Gaat het om een aanvraag of bezwaarschrift?</h3>
+									<h3>* Does it concern an application or notice of objection?</h3>
 									<v-autocomplete
 									v-model="generalForm.app_type"
 									:items="app_types"
@@ -35,7 +35,7 @@
 									></v-autocomplete>
 								</v-flex>
 								<v-flex xs12 sm12 md12>
-									<h3>* Kies hier wat er is aangevraagd?</h3>
+									<h3>* Select here what has been requested.</h3>
 									<v-autocomplete
 									v-model="generalForm.app_data"
 									:items="app_data"
@@ -81,12 +81,12 @@
 										{{this.dateEmailNotification}}
 										&nbsp;&nbsp;
 										<input class="input-white-outline" v-model="dateNotifyEmail" id="dateNotifyEmail" type="email" placeholder="Uw emailadres">
-										<v-btn @click="onEmailSubmit" :loading="this.emailloading" style="font-size: 14px; margin: 0px 10px; width: 200px; height: 30px; color: #2196f3; background-color: white">VERZENDEN</v-btn>
+										<v-btn @click="onEmailSubmit" :loading="this.emailloading" style="font-size: 14px; margin: 0px 10px; width: 200px; height: 30px; color: #2196f3; background-color: white">Send</v-btn>
 									</v-flex>
 
 								</v-flex>
 								<v-flex xs12 sm12 md12>
-									<h3>* Heeft u een brief ontvangen dat er later wordt belist?</h3>
+									<h3>* Have you received a letter that will be decided later?</h3>
 									<v-radio-group
 									v-model="generalForm.letter_received"
 									row
@@ -95,19 +95,19 @@
 										<v-radio label="Nee" value="no" @change="showAlert(0)"></v-radio>
 									</v-radio-group>
 									<v-flex xs12 sm12 md12 v-if="alertShow == true" style="font-size: 14px; padding: 13px 16px; background-color: #2196f3; color: white; margin-bottom: 16px">
-										Vul het aantal weken in dat later wordt beslist (de verdaging) :
+										Enter the number of weeks that will be decided later (the adjournment) :
 										&nbsp;
 										<input class="input-white-outline" v-model="weeks" id="weeks" @keypress="changeWeekandDays" style="width: 60px">
 										weken.
 										&nbsp;&nbsp;&nbsp;&nbsp;
-										Of vul het aantal dagen in dat later wordt beslist:
+										Or enter the number of days that will be decided later:
 										&nbsp;
 										<input class="input-white-outline" id="days" v-model="days" @keypress="changeWeekandDays" style="width: 60px">
-										dagen.
+										days.
 									</v-flex>
 								</v-flex>
 								<v-flex xs12 sm12 md12>
-									<h3>Wat is het kenmerk van uw aanvraag / of bezwaarschrift?</h3>
+									<h3>What is the characteristic of your application / or objection?</h3>
 									<v-text-field
 									v-model="generalForm.subject"
 									counter=35
@@ -120,11 +120,11 @@
 										color="error"
 										outline
 										>
-										U kunt maximaal 35 karakters gebruiken.
+										You can use a maximum of 35 characters.
 									</v-alert>
 								</v-flex>
 								<v-flex xs12 sm12 md12>
-									<h3>* Selecteer hieronder de gemeente:</h3>
+									<h3>* Select the municipality below:</h3>
 									<v-autocomplete
 									v-model="generalForm.municipality"
 									:items="municipality_items"
@@ -145,7 +145,7 @@
 					<v-card-actions>
 						<v-container>
 							<v-layout justify-end>
-								<v-btn dark color="primary" @click="onSave" :loading="this.loading">VOLGENDE</v-btn>
+								<v-btn dark color="primary" @click="onSave" :loading="this.loading">Next</v-btn>
 							</v-layout>
 						</v-container>
 					</v-card-actions>
