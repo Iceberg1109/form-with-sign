@@ -94,6 +94,97 @@ class FaxController extends Controller
 		return redirect('../upload');
 	}
 
+	public function signature( Request $request )
+	{
+		ini_set('memory_limit', '256M');
+		$sigPresent = 0;
+		$customer = new Customer();
+		if ( $request->has('jsignature') && $request->filled('jsignature') ) {
+
+			$jsignature = $request['jsignature'];
+			$signature = base64_decode(str_replace("data:image/png;base64,", "", $jsignature));
+			//gemerate signature file.
+			$sign_file = (string) rand(1, 1000000) . ".png";
+			//create it.
+			Storage::disk('admin')->put($sign_file, $signature);
+			session()->put([ 'customer_sign' => $sign_file ]);
+			$customer->sign = session('customer_sign');
+			$sigPresent = 1;
+		}
+
+		if ( $request->has('imgName') && $request->has('imgPath') ) {
+			$customer->sign_name = $request['imgName'];
+			$customer->sign_path = $request['imgPath'];
+			if ( $sigPresent == 0 ) {
+				$customer->sign_image = 1;
+			}
+		}
+
+		$customer->first_name = session('first_name');
+		$customer->last_name = session('last_name');
+		$customer->gender = session('gender');
+		//post
+		$customer->postal = session('customer_postal');
+		//home
+		$customer->home_num = session('home_num');
+		$customer->phone = session('phone');
+		$customer->email = session('customer_email');
+		$customer->address = session('customer_address');
+		$customer->city = session('customer_city');
+		$customer->notes = session('notes');
+		$customer->bank_account = session('bank_account');
+
+		$customer->save();
+
+		$government = new Government();
+		$government->name = session('name');
+		$government->department = session('department');
+		$government->email = session('email');
+		$government->fax = session('fax');
+		$government->address = session('address');
+		$government->postal = session('postal');
+		$government->city = session('city');
+		$government->save();
+
+		// create new fax
+		$fax = new Fax();
+		$fax->date = session('date');
+		$fax->letter_received = session('letter_received');
+		$fax->applied_for = session('applied_for');
+		$fax->government_id = $government->id;
+		$fax->customer_id = $customer->id;
+
+		// set fax type
+		if ( $government->fax == "Geen faxnummer bekend" ) {
+
+			// set letter
+			$fax->type_id = 2;
+		} else {
+
+			// set fax
+			$fax->type_id = 1;
+		}
+
+		// save the fax
+		$fax->save();
+
+		$gen_faxcode = "IGB" . (string) $fax->id;
+		$fax->gen_faxcode = $gen_faxcode;
+		$fax->status = "in-progress";
+		$fax->Save();
+
+		session()->put([
+			'gen_faxcode' => $gen_faxcode,
+			'fax_id'      => $fax->id,
+		]);
+
+		//SendFax::dispatch($fax->id, $government->id, $customer->id, $customer->email);
+
+		PdfGenerator::generateForm_ingebreke($fax->id, $government->id, $customer->id);
+
+		return redirect('../thanks');
+	}
+
 	public function ValidatePostal( Request $request )
 	{
 		return Postal::Validate($request);
