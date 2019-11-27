@@ -39,10 +39,7 @@
 						<v-layout wrap>
 							<v-flex xs12 sm12 md12>
 								<p style="font-size: 18px; padding: 20px; background-color: #eee;">
-									Hierbij machtigt u Beslisapp.nl om de {{this.government_name}} in gebreke te stellen. Als de gemeente {{this.government_name}} niet binnen vijftien dagen een besluit neemt op uw aanvraag of bezwaarschrift is een dwangsom verschuldigd.
-									De hoogte van de dwangsom is: 20,- &euro; per dag voor de eerste 14 dagen. 30,- &euro; per dag voor de 14 dagen daarna en 40,- &euro; per dag voor de 14 dagen daarna. De totale dwangsom bedraagt maximaal &euro; 1260,-.<br><br>
-									De kosten voor het in gebreke stellen bedragen 30 procent van de uit te betalen dwangsom. De beslisapp incasseert de dwangsom bij de gemeente.
-									Zeventig procent van de ontvangen dwangsom wordt binnen twee weken na ontvangst overgemaakt op uw rekeningnummer "{{this.bank_number}}".
+									Lorem Ipsum.
 								</p>
 							</v-flex>
 							<v-flex xs12 sm12 md12>
@@ -66,7 +63,7 @@
 									ref="signaturePad"
 									height="300px"
 									/>
-									<v-btn color="" @click="resetSign()" style="margin-left: 0; margin-top: 28px;">HANDTEKENING OPNIEUW PLAATSEN</v-btn>
+									<v-btn color="" @click="resetSign()" style="margin-left: 0; margin-top: 28px;">PLACE SIGNATURE</v-btn>
 								</div>
 								<div v-if="sign_mode == 2" style="border: solid 1px gray; height: 300px;">
 									<template v-if="sign_mode == 2">
@@ -83,7 +80,7 @@
 						<v-layout justify-end class="move-actions">
 							<!-- <v-btn>Annuleer</v-btn> -->
 							<v-btn dark color="primary" outline @click="onPrev">Terug</v-btn>
-							<v-btn dark color="primary" @click="onSave" :loading="this.loading">VERZENDEN</v-btn>
+							<v-btn dark color="primary" @click="onSave" :loading="this.loading">SEND</v-btn>
 						</v-layout>
 					</v-container>
 				</v-card-actions>
