@@ -112,7 +112,7 @@
 				loading: false,
 				image_loading: false,
 				show_errMsg: false,
-				errMsg_txt: "Er is een fout opgetreden tijdens het verzenden. Neem contact op met: support@beslisapp.nl of 036 525 4774 voor een oplossing.",
+				errMsg_txt: "An error occurred while sending. Contact: support@beslisapp.nl or 036 525 4774 for a solution.",
 				errMsg_width: "600px",
 				errmsg_loading: false,
 			}
