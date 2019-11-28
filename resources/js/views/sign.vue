@@ -251,7 +251,7 @@
 					});
 				}
 				else{
-					this.err_msg = 'Plaats hier uw handtekening.';
+					this.err_msg = 'Place your signature here.';
 				}
 			},
 		}
