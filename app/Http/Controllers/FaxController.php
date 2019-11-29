@@ -185,6 +185,33 @@ class FaxController extends Controller
 		return redirect('../thanks');
 	}
 
+	public function processImage( Request $request )
+	{
+
+		if ( $file = $request->file('dzfile') ) {
+
+			ini_set('memory_limit', '256M');
+
+			$this->validate($request, [
+				'dzfile' => 'required|mimes:jpeg,jpg,png|max:2000',
+			]);
+
+			$name = time() . $file->getClientOriginalName();
+			$path = public_path() . '/assets/signatures/' . $name;
+			$file->move('assets/signatures/', $name);
+			$img = Image::make($path)->greyscale()->contrast(50)->brightness(40);
+			$img->save($path);
+			$rt = new \stdClass();
+			$rt->name = $name;
+			$rt->path = $path;
+			$rt->url = 'https://fax.beslisapp.nl/assets/signatures/' . $name;
+
+			return response()->json($rt);
+		} else {
+			return "File Not Found";
+		}
+	}
+
 	public function ValidatePostal( Request $request )
 	{
 		return Postal::Validate($request);
